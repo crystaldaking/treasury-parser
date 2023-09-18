@@ -16,7 +16,7 @@ type sndList struct {
 }
 
 type SndEntry struct {
-	Id        int    `xml:"uid"`
+	Uid       int    `xml:"uid"`
 	FirstName string `xml:"firstName"`
 	LastName  string `xml:"lastName"`
 	SdnType   string `xml:"sdnType"`
