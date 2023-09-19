@@ -7,6 +7,7 @@ import (
 	"treasury-parser/config"
 	"treasury-parser/models"
 	"treasury-parser/services/parser"
+	"treasury-parser/services/search"
 )
 
 type BaseHandler struct {
@@ -84,4 +85,18 @@ func (h *BaseHandler) State(c *fiber.Ctx) error {
 		"result": false,
 		"info":   "ok",
 	})
+}
+
+func (h *BaseHandler) GetNames(c *fiber.Ctx) error {
+	t := c.Query("type")
+	searchText := c.Query("name")
+
+	if len(searchText) <= 0 {
+		return c.Status(fiber.StatusNoContent).JSON(fiber.Map{
+			"result": false,
+			"info":   "",
+		})
+	}
+
+	return c.JSON(search.DoSearch(h.db, t, searchText))
 }

@@ -16,9 +16,7 @@ func main() {
 
 	app.Get("/state", handler.State)
 
-	app.Get("/get_names", func(ctx *fiber.Ctx) error {
-		return ctx.SendString("implement get names route")
-	})
+	app.Get("/get_names", handler.GetNames)
 
 	log.Fatal(app.Listen(":8080"))
 }

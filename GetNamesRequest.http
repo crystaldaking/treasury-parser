@@ -1,0 +1,11 @@
+### Default strong
+GET http://127.0.0.1:8080/get_names?name=MUZONZINI&type=strong
+Accept: application/json
+
+### Case sensetive
+GET http://127.0.0.1:8080/get_names?name=MuZoNZINI&type=strong
+Accept: application/json
+
+### Default weak
+GET http://127.0.0.1:8080/get_names?name=Mohammed Musa&type=weak
+Accept: application/json
