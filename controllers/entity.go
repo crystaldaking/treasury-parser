@@ -13,39 +13,39 @@ import (
 type BaseHandler struct {
 	db         *gorm.DB
 	inProgress bool
-	mutex      sync.Mutex
+	mutex      sync.RWMutex
 }
 
 func NewBaseHandler(db *gorm.DB) *BaseHandler {
 	return &BaseHandler{db: db}
 }
 
-func (h *BaseHandler) IsImportInProgress() bool {
-	h.mutex.Lock()
-	defer h.mutex.Unlock()
+func (h *BaseHandler) isImportInProgress() bool {
+	h.mutex.RLock()
+	defer h.mutex.RUnlock()
 	return h.inProgress
 }
 
-func (h *BaseHandler) SetImportInProgress(status bool) {
-	h.mutex.Lock()
-	defer h.mutex.Unlock()
+func (h *BaseHandler) setImportInProgress(status bool) {
+	h.mutex.RLock()
+	defer h.mutex.RUnlock()
 	h.inProgress = status
 }
 
 func (h *BaseHandler) Update(c *fiber.Ctx) error {
-	if h.IsImportInProgress() {
+	if h.isImportInProgress() {
 		return c.Status(fiber.StatusConflict).JSON(fiber.Map{
 			"result": false,
 			"info":   "already started",
 		})
 	}
 
-	h.SetImportInProgress(true)
+	h.setImportInProgress(true)
 
 	go func() {
 		data := parser.FetchData(config.Config("FILE_URL"))
 		parser.Import(h.db, parser.Parse(data))
-		h.SetImportInProgress(false)
+		h.setImportInProgress(false)
 	}()
 
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{
@@ -56,7 +56,7 @@ func (h *BaseHandler) Update(c *fiber.Ctx) error {
 }
 
 func (h *BaseHandler) State(c *fiber.Ctx) error {
-	if h.IsImportInProgress() {
+	if h.isImportInProgress() {
 		return c.Status(fiber.StatusConflict).JSON(fiber.Map{
 			"result": false,
 			"info":   "updating",

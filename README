@@ -1,0 +1,13 @@
+# Treasury-parser
+
+## Installation
+Use ur docker-compose [docker](docker-compose up -d) to run project.
+
+## Usage
+Request samples
+
+```
+GetNamesRequest.http
+StateRequest.http
+UpdateRequest.http
+```

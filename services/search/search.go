@@ -23,7 +23,7 @@ func DoSearch(db *gorm.DB, condition string, searchText string) []models.Entity 
 			q := db.Where("LOWER(first_name || ' ' || last_name) ILIKE ?", "%"+strings.ToLower(searchTerm)+"%")
 			query = query.Or(q)
 		}
-		query.Debug().Find(&entities)
+		query.Find(&entities)
 		return entities
 	}
 
