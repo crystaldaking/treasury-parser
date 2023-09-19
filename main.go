@@ -1,31 +1,24 @@
 package main
 
 import (
-	/* "github.com/gofiber/fiber/v2"
-	"log" */
-	"treasury-parser/services/parser"
+	"github.com/gofiber/fiber/v2"
+	"log"
+	"treasury-parser/controllers"
 	"treasury-parser/utils"
 )
 
 func main() {
-	/* app := fiber.New()
-	utils.Init()
+	app := fiber.New()
+	db := utils.Init()
+	handler := controllers.NewBaseHandler(db)
 
-	app.Post("/update", func(ctx *fiber.Ctx) error {
-		return ctx.SendString("implement update route")
-	})
+	app.Post("/update", handler.Update)
 
-	app.Get("/state", func(ctx *fiber.Ctx) error {
-		return ctx.SendString("implement state route")
-	})
+	app.Get("/state", handler.State)
 
 	app.Get("/get_names", func(ctx *fiber.Ctx) error {
 		return ctx.SendString("implement get names route")
 	})
 
-	log.Fatal(app.Listen(":8080")) */
-
-	db := utils.Init()
-	data := parser.FetchData("https://www.treasury.gov/ofac/downloads/sdn.xml")
-	parser.Import(db, parser.Parse(data))
+	log.Fatal(app.Listen(":8080"))
 }
